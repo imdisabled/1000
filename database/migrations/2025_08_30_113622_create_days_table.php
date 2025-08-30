@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('day_number')->unique(); // 1 to 1000
             $table->date('date'); // The actual date for this day
             $table->text('task_description'); // Description of work to do
-            $table->boolean('is_completed')->default(false);
+            $table->boolean('is_completed')->nullable()->default(null);
             $table->timestamp('completed_at')->nullable();
             $table->text('quote')->nullable(); // Quote from n8n
             $table->timestamps();

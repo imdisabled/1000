@@ -72,7 +72,7 @@ class DaySeeder extends Seeder
                 'day_number' => $i,
                 'date' => $startDate->copy()->addDays($i - 1),
                 'task_description' => $tasks[($i - 1) % count($tasks)],
-                'is_completed' => false
+                'is_completed' => null
             ]);
         }
     }
