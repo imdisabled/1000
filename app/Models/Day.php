@@ -43,7 +43,7 @@ class Day extends Model
 
     public function isPastDue()
     {
-        return $this->date->isPast() && !$this->is_completed;
+        return $this->date->isPast() && $this->getOriginal('is_completed') === false;
     }
 
     public function isToday()

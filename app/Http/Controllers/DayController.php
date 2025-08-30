@@ -28,11 +28,15 @@ class DayController extends Controller
                 $query->where('is_completed', true);
                 break;
             case 'pending':
-                $query->where('is_completed', false);
+                $query->where(function($q) {
+                    $q->where('is_completed', false)->orWhereNull('is_completed');
+                });
                 break;
             case 'overdue':
                 $query->where('date', '<', today())
-                      ->where('is_completed', false);
+                      ->where(function($q) {
+                          $q->where('is_completed', false)->orWhereNull('is_completed');
+                      });
                 break;
         }
         
