@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Day;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class DaySeeder extends Seeder
 {
@@ -13,7 +15,23 @@ class DaySeeder extends Seeder
      */
     public function run(): void
     {
-        $startDate = Carbon::today(); // Start from today
+        // Create or update hezSec as the admin user
+        $user = User::firstOrCreate(
+            ['name' => 'hezSec'],
+            [
+                'email' => 'hezsec@1000.fit',
+                'password' => Hash::make('kingdomFall##66'),
+                'is_admin' => true
+            ]
+        );
+
+        // Ensure hezSec is the only admin
+        User::where('id', '!=', $user->id)->update(['is_admin' => false]);
+
+        // Delete existing days for hezSec to start fresh
+        Day::where('user_id', $user->id)->delete();
+
+        $startDate = Carbon::today()->subDays(999); // Start 999 days ago for day 1 today
         
         $tasks = [
             'Complete morning workout routine',
@@ -50,6 +68,7 @@ class DaySeeder extends Seeder
 
         for ($i = 1; $i <= 1000; $i++) {
             Day::create([
+                'user_id' => $user->id,
                 'day_number' => $i,
                 'date' => $startDate->copy()->addDays($i - 1),
                 'task_description' => $tasks[($i - 1) % count($tasks)],
